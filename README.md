@@ -16,7 +16,7 @@ Self-Driving Car Engineer Nanodegree Program
 3. Compile: `cmake .. && make`
 4. Run it: `./ExtendedKF path/to/input.txt path/to/output.txt`. You can find
    some sample inputs in 'data/'.
-    - eg. `./ExtendedKF ../data/obj_pose-laser-radar-ekf-input.txt output.txt`
+    - eg. `./ExtendedKF ../data/sample-laser-radar-measurement-data-1.txt output.txt`
 
 ## Editor Settings
 
@@ -49,3 +49,4 @@ for instructions and the project rubric.
 
 * You don't have to follow this directory structure, but if you do, your work
   will span all of the .cpp files here. Keep an eye out for TODOs.
+
