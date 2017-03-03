@@ -27,10 +27,3 @@ void KalmanFilter::Update(const VectorXd &z) {
     * update the state
   */
 }
-
-void KalmanFilter::UpdateWithAlreadyPredictedMeasurements(const VectorXd& z, const VectorXd& z_pred) {
-  /**
-  TODO:
-    * update after predicting
-  */
-}

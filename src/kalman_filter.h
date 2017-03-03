@@ -61,12 +61,6 @@ public:
    */
   void Update(const VectorXd &z);
 
-  /**
-   * @param z The measurement at k+1
-   * @param z_pred The predicted measurements at k+1
-   */
-  void UpdateWithAlreadyPredictedMeasurements(const VectorXd &z, const VectorXd &z_pred);
-
 };
 
 #endif /* KALMAN_FILTER_H_ */
