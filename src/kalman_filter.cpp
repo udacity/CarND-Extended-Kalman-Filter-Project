@@ -1,5 +1,8 @@
 #include "kalman_filter.h"
 
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+
 KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
