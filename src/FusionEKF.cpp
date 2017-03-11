@@ -22,10 +22,21 @@ FusionEKF::FusionEKF() {
   H_laser_ = MatrixXd(2, 4);
   Hj_ = MatrixXd(3, 4);
 
+  //measurement covariance matrix - laser
+  R_laser_ << 0.0225, 0,
+        0, 0.0225;
+
+  //measurement covariance matrix - radar
+  R_radar_ << 0.09, 0, 0,
+        0, 0.0009, 0,
+        0, 0, 0.09;
+
   /**
   TODO:
     * Finish initializing the FusionEKF.
   */
+
+
 }
 
 /**
@@ -34,6 +45,8 @@ FusionEKF::FusionEKF() {
 FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
+
+
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
@@ -74,6 +87,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Update the state transition matrix F according to the new elapsed time.
       - Time is measured in seconds.
      * Update the process noise covariance matrix.
+     * Use sigma_ax = 9 and sigma_ay = 9 for your Q matrix.
    */
 
   ekf_.Predict();
