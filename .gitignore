@@ -16,7 +16,7 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-ide_profiles/xcode/xcuserdata/
+xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
