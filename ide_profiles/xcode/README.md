@@ -1,7 +1,12 @@
 ## Xcode IDE profile
 
-Use this profile to edit and build the project using Xcode.
+Use this profile to edit the project using Xcode.
 
 To use this profile, open `ExtendedKF.xcodeproj` in this folder.
 
-To generate an Xcode project or update existing one, use `cmake -G "Xcode" ../..` command in the current directory.
+To build using Xcode, re-generate this project as follows:
+
+1. Remove all files from this directory except of `README.md`
+2. Execute the following command in the current directory: `cmake -G "Xcode" ../..`
+
+Steps above are required because cmake's Xcode generator uses absolute paths that will not work on your machine.
