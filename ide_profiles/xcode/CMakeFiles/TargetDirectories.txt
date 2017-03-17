@@ -1,3 +1,0 @@
-/Users/denyskrut/Documents/Extended-Kalman-Filter/ide_profiles/xcode/CMakeFiles/ExtendedKF.dir
-/Users/denyskrut/Documents/Extended-Kalman-Filter/ide_profiles/xcode/CMakeFiles/ALL_BUILD.dir
-/Users/denyskrut/Documents/Extended-Kalman-Filter/ide_profiles/xcode/CMakeFiles/ZERO_CHECK.dir
