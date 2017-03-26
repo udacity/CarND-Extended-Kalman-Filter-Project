@@ -74,7 +74,7 @@ First you would need to configure your profile for debugging.
 
 ### How to output contents of the Eigen object?
 
-While your program is under the debugger, execute the following command in the "Output" window:
+While your program is stopped on a breakpoint, execute the following command in the "Output" window:
 
 ```
 (lldb) expr R_laser_.m_storage.m_data[0,0]
