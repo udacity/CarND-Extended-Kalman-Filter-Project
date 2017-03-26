@@ -10,7 +10,7 @@ First, you need to install `cmake`. One way to do it is through downloading "CMa
 
 Then you would need to add `cmake` to a command line. To do so for the current session, execute the following command: `PATH="/Applications/CMake.app/Contents/bin":"$PATH"`.
 
-Finally, to generate Xcode IDE profile, execute the following command in the current directory: `cmake -G "Xcode" ../..`. You will need to have cmake installed first to achieve this.
+Finally, to generate Xcode IDE profile, execute the following command in the current directory: `cmake -G "Xcode" ../..`.
 
 ```
 MacBook-Pro:xcode denyskrut$ PATH="/Applications/CMake.app/Contents/bin":"$PATH"
@@ -42,6 +42,8 @@ After you have generated Xcode IDE profile using previous step, you should be ab
 
 ### How to debug using Xcode IDE profile?
 
+First you would need to configure your profile for debugging.
+
 1. Click on the "ALL_BUILD" Scheme on the top left. Dropdown with Schemes will open.
 
 ![Scheme selection button](images/schemes_location.png)
@@ -58,7 +60,7 @@ After you have generated Xcode IDE profile using previous step, you should be ab
 
 ![Arguments tab](images/arguments_tab.png)
 
-4. Add new item to the "Arguments passed on launch" section: `../../../data/sample-laser-radar-measurement-data-1.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
+4. Add new item to the "Arguments passed on launch" section: `../../../data/sample-laser-radar-measurement-data-2.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
 
 ![Arguments tab](images/arguments_selection.png)
 
@@ -72,7 +74,7 @@ After you have generated Xcode IDE profile using previous step, you should be ab
 
 ### How to output contents of the Eigen object?
 
-Use the following command:
+While your program is under the debugger, execute the following command in the "Output" window:
 
 ```
 (lldb) expr R_laser_.m_storage.m_data[0,0]
