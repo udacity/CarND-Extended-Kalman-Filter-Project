@@ -38,7 +38,7 @@ MacBook-Pro:xcode denyskrut$ cmake -G "Xcode" ../..
 
 After you have generated Xcode IDE profile using previous step, you should be able to find and open `ExtendedKF.xcodeproj` in the current directory. After that you can press big "Run" button on the top left to build.
 
-![Build button](images/schemes_location.png)
+![Build button](images/build_button.png)
 
 ### How to debug using Xcode IDE profile?
 
@@ -60,11 +60,11 @@ After you have generated Xcode IDE profile using previous step, you should be ab
 
 4. Add new item to the "Arguments passed on launch" section: `../../../data/sample-laser-radar-measurement-data-1.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
 
-![Arguments tab](images/arguments_tab.png)
+![Arguments tab](images/arguments_selection.png)
 
 5. Put a breakpoint in the section of the code that you expect to execute.
 
-![Breakpoint](images/arguments_tab.png)
+![Breakpoint](images/breakpoint.png)
 
 6. Click "Run" on the top left. After these steps you should find your program stopped under debugger.
 
@@ -79,4 +79,4 @@ Use the following command:
 (double) $23 = 0.022499999999999999
 ```
 
-This will output contents of the `R_laser_` matrix at location `0, 0`.
+This will output contents of the `R_laser_` matrix at index `0, 0`.
