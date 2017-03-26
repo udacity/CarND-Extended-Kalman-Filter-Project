@@ -36,7 +36,7 @@ MacBook-Pro:xcode denyskrut$ cmake -G "Xcode" ../..
 
 ### How to build using Xcode IDE profile?
 
-After you have generated Xcode IDE profile using previous step, you should be able to find and open `ExtendedKF.xcodeproj` in the current directory. After that you can press big "Run" button on the top left to build.
+After you have generated Xcode IDE profile using previous step, you should be able to find and open `ExtendedKF.xcodeproj` in the current directory. After that you can press ▶ button on the top left to build.
 
 ![Build button](images/build_button.png)
 
@@ -68,7 +68,7 @@ First you would need to configure your profile for debugging.
 
 ![Breakpoint](images/breakpoint.png)
 
-6. Click "Run" on the top left. After these steps you should find your program stopped under debugger.
+6. Click ▶ on the top left. After these steps you should find your program stopped under debugger.
 
 ![Breakpoint](images/at_breakpoint.png)
 
