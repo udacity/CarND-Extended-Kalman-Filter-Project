@@ -4,7 +4,7 @@
 
 You will generate one! Because IDE profiles can contain paths specific to your machine, we think the best way to get an Xcode IDE profile for this project is to generate one using `cmake`. Don't worry, it is really easy.
 
-## How to generate Xcode IDE profile?
+### How to generate Xcode IDE profile?
 
 First, you need to install `cmake`. One way to do it is through downloading "CMake" app on the [cmake website](https://cmake.org/download/). Choose a version for "Mac OSX". After your download is complete, you can drag and drop "CMake" app to your "Applications" folder.
 
