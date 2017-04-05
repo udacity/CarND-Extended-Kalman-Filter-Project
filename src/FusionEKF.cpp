@@ -80,8 +80,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Initialize state.
       */
-      x = measurement_pack.raw_measurements_[0];
-      y = measurement_pack.raw_measurements_[1];
+      x = max(measurement_pack.raw_measurements_[0], .0001);
+      y = max(measurement_pack.raw_measurements_[1], .0001);
     }
 
     ekf_.x_ << x, y, 1, 1;
