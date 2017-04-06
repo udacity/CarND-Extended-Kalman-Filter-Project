@@ -1,13 +1,13 @@
-project(ExtendedKF)
+project(Extended_Kalman_Filter)
 
 cmake_minimum_required (VERSION 3.5)
 
 add_definitions(-std=c++0x)
 
 set(sources
-    src/FusionEKF.cpp
-    src/kalman_filter.cpp
-    src/main.cpp
-    src/tools.cpp)
+    ./FusionEKF.cpp
+    ./kalman_filter.cpp
+    ./main.cpp
+    ./tools.cpp)
 
 add_executable(ExtendedKF ${sources})
