@@ -49,27 +49,11 @@ void check_files(ifstream& in_file, string& in_name,
   }
 }
 
-int main(int argc, char* argv[]) {
-
-  check_arguments(argc, argv);
-
-  string in_file_name_ = argv[1];
-  ifstream in_file_(in_file_name_.c_str(), ifstream::in);
-
-  string out_file_name_ = argv[2];
-  ofstream out_file_(out_file_name_.c_str(), ofstream::out);
-
-  check_files(in_file_, in_file_name_, out_file_, out_file_name_);
-
-  vector<MeasurementPackage> measurement_pack_list;
-  vector<GroundTruthPackage> gt_pack_list;
-
+void read_data(std::ifstream &in_file, std::vector<MeasurementPackage> &measurement_pack_list, std::vector<GroundTruthPackage> &gt_pack_list)
+{
   string line;
-
-  // prep the measurement packages (each line represents a measurement at a
-  // timestamp)
-  while (getline(in_file_, line)) {
-
+  
+  while (getline(in_file, line)) { // prep the measurement packages (each line represents a measurement at a	timestamp)
     string sensor_type;
     MeasurementPackage meas_package;
     GroundTruthPackage gt_package;
@@ -78,9 +62,7 @@ int main(int argc, char* argv[]) {
 
     // reads first element from the current line
     iss >> sensor_type;
-    if (sensor_type.compare("L") == 0) {
-      // LASER MEASUREMENT
-
+    if (sensor_type.compare("L") == 0) {  // LASER MEASUREMENT
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::LASER;
       meas_package.raw_measurements_ = VectorXd(2);
@@ -92,8 +74,8 @@ int main(int argc, char* argv[]) {
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
-    } else if (sensor_type.compare("R") == 0) {
-      // RADAR MEASUREMENT
+    }
+    else if (sensor_type.compare("R") == 0) { // RADAR MEASUREMENT
 
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::RADAR;
@@ -123,6 +105,24 @@ int main(int argc, char* argv[]) {
     gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
     gt_pack_list.push_back(gt_package);
   }
+}
+
+int main(int argc, char* argv[]) {
+  check_arguments(argc, argv);
+
+  string in_file_name_ = argv[1];
+  ifstream in_file_(in_file_name_.c_str(), ifstream::in);
+
+  string out_file_name_ = argv[2];
+  ofstream out_file_(out_file_name_.c_str(), ofstream::out);
+
+  check_files(in_file_, in_file_name_, out_file_, out_file_name_);
+
+  vector<MeasurementPackage> measurement_pack_list;
+  vector<GroundTruthPackage> gt_pack_list;
+
+  // read the data file
+  read_data(in_file_, measurement_pack_list, gt_pack_list);
 
   // Create a Fusion EKF instance
   FusionEKF fusionEKF;
@@ -151,8 +151,8 @@ int main(int argc, char* argv[]) {
       out_file_ << measurement_pack_list[k].raw_measurements_(1) << "\t";
     } else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR) {
       // output the estimation in the cartesian coordinates
-      float ro = measurement_pack_list[k].raw_measurements_(0);
-      float phi = measurement_pack_list[k].raw_measurements_(1);
+      auto ro = measurement_pack_list[k].raw_measurements_(0);
+      auto phi = measurement_pack_list[k].raw_measurements_(1);
       out_file_ << ro * cos(phi) << "\t"; // p1_meas
       out_file_ << ro * sin(phi) << "\t"; // ps_meas
     }
@@ -169,7 +169,12 @@ int main(int argc, char* argv[]) {
 
   // compute the accuracy (RMSE)
   Tools tools;
-  cout << "Accuracy - RMSE:" << endl << tools.CalculateRMSE(estimations, ground_truth) << endl;
+  VectorXd rmse(tools.CalculateRMSE(estimations, ground_truth));
+
+  //cout << "Accuracy - RMSE:" << endl << rmse << endl;
+  cout << "RMSE" << endl;
+  for (auto i=0u; i<rmse.size(); i++)
+	  cout << rmse[i] << endl;
 
   // close files
   if (out_file_.is_open()) {
