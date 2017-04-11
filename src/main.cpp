@@ -14,11 +14,11 @@ using Eigen::VectorXd;
 using std::vector;
 
 void check_arguments(int argc, char* argv[]) {
-  string usage_instructions = "Usage instructions: ";
+  string usage_instructions{ "Usage instructions: " };
   usage_instructions += argv[0];
   usage_instructions += " path/to/input.txt output.txt";
 
-  bool has_valid_args = false;
+  auto has_valid_args = false;
 
   // make sure the user has provided input and output files
   if (argc == 1) {
@@ -66,12 +66,9 @@ void read_data(std::ifstream &in_file, std::vector<MeasurementPackage> &measurem
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::LASER;
       meas_package.raw_measurements_ = VectorXd(2);
-      float x;
-      float y;
-      iss >> x;
-      iss >> y;
+      double x, y;
+      iss >> x >> y >> timestamp;
       meas_package.raw_measurements_ << x, y;
-      iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
     }
@@ -80,27 +77,16 @@ void read_data(std::ifstream &in_file, std::vector<MeasurementPackage> &measurem
       // read measurements at this timestamp
       meas_package.sensor_type_ = MeasurementPackage::RADAR;
       meas_package.raw_measurements_ = VectorXd(3);
-      float ro;
-      float phi;
-      float ro_dot;
-      iss >> ro;
-      iss >> phi;
-      iss >> ro_dot;
+      double ro, phi, ro_dot;
+      iss >> ro >> phi >> ro_dot >> timestamp;
       meas_package.raw_measurements_ << ro, phi, ro_dot;
-      iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
     }
 
     // read ground truth data to compare later
-    float x_gt;
-    float y_gt;
-    float vx_gt;
-    float vy_gt;
-    iss >> x_gt;
-    iss >> y_gt;
-    iss >> vx_gt;
-    iss >> vy_gt;
+    double x_gt, y_gt, vx_gt, vy_gt;
+    iss >> x_gt >> y_gt >> vx_gt >> vy_gt;
     gt_package.gt_values_ = VectorXd(4);
     gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
     gt_pack_list.push_back(gt_package);
@@ -110,10 +96,10 @@ void read_data(std::ifstream &in_file, std::vector<MeasurementPackage> &measurem
 int main(int argc, char* argv[]) {
   check_arguments(argc, argv);
 
-  string in_file_name_ = argv[1];
+  string in_file_name_{ argv[1] };
   ifstream in_file_(in_file_name_.c_str(), ifstream::in);
 
-  string out_file_name_ = argv[2];
+  string out_file_name_{ argv[2] };
   ofstream out_file_(out_file_name_.c_str(), ofstream::out);
 
   check_files(in_file_, in_file_name_, out_file_, out_file_name_);
@@ -168,8 +154,8 @@ int main(int argc, char* argv[]) {
   }
 
   // compute the accuracy (RMSE)
-  Tools tools;
-  VectorXd rmse(tools.CalculateRMSE(estimations, ground_truth));
+  //Tools tools;
+  VectorXd rmse(fusionEKF.CalculateRMSE(estimations, ground_truth));
 
   //cout << "Accuracy - RMSE:" << endl << rmse << endl;
   cout << "RMSE" << endl;
