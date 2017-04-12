@@ -2,53 +2,37 @@
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
 
+using Eigen::Vector2d;
+using Eigen::Vector3d;
+using Eigen::VectorXd;
+using Eigen::Matrix2d;
+using Eigen::Matrix3d;
+using Eigen::Matrix4d;
+using Eigen::Matrix;
+
 class KalmanFilter {
 public:
-
-  // state vector
-  Eigen::VectorXd x_;
-
-  // state covariance matrix
-  Eigen::MatrixXd P_;
-
-  // state transistion matrix
-  Eigen::MatrixXd F_;
-
-  // process covariance matrix
-  Eigen::MatrixXd Q_;
+  VectorXd x_;   // state vector
+  Matrix4d P_;   // state covariance matrix
+  Matrix4d F_;   // state transistion matrix
+  Matrix4d Q_;   // process covariance matrix (/noise/stochatic/random/assumed normally distributed)
 
   // measurement matrix
-  Eigen::MatrixXd H_;
+  Matrix<double, 2, 4> H_laser_;
+  Matrix<double, 4, 2> Ht_laser_;
+  Matrix<double, 3, 4> Hj_;
+  Matrix<double, 4, 3> Htj_;
 
   // measurement covariance matrix
-  Eigen::MatrixXd R_;
+  Matrix2d R_laser_;
+  Matrix3d R_radar_;
 
-  /**
-   * Constructor
-   */
   KalmanFilter();
-
-  /**
-   * Destructor
-   */
   virtual ~KalmanFilter();
-
-  /**
-   * Init Initializes Kalman filter
-   * @param x_in Initial state
-   * @param P_in Initial state covariance
-   * @param F_in Transition matrix
-   * @param H_in Measurement matrix
-   * @param R_in Measurement covariance matrix
-   * @param Q_in Process covariance matrix
-   */
-  void Init(Eigen::VectorXd &x_in, Eigen::MatrixXd &P_in, Eigen::MatrixXd &F_in,
-      Eigen::MatrixXd &H_in, Eigen::MatrixXd &R_in, Eigen::MatrixXd &Q_in);
 
   /**
    * Prediction Predicts the state and the state covariance
    * using the process model
-   * @param delta_T Time between k and k+1 in s
    */
   void Predict();
 
@@ -56,14 +40,16 @@ public:
    * Updates the state by using standard Kalman Filter equations
    * @param z The measurement at k+1
    */
-  void Update(const Eigen::VectorXd &z);
+  void Update(const Vector2d &z);
 
   /**
    * Updates the state by using Extended Kalman Filter equations
    * @param z The measurement at k+1
    */
-  void UpdateEKF(const Eigen::VectorXd &z);
+  void UpdateEKF(const Vector3d &z);
 
+private:
+  Matrix4d I;  // identity matrix
 };
 
 #endif /* KALMAN_FILTER_H_ */
