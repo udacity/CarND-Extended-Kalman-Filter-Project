@@ -7,19 +7,17 @@
 #include <string>
 #include <fstream>
 #include "kalman_filter.h"
-//#include "tools.h"
+
+using Eigen::VectorXd;
+using Eigen::Vector4d;
+using std::vector;
 
 class FusionEKF {
 public:
-  /**
-  * Constructor.
-  */
   FusionEKF();
-
-  /**
-  * Destructor.
-  */
   virtual ~FusionEKF();
+
+  static constexpr double MIN_VAL = 0.01; /// minimum value to overcome divide by zero
 
   /**
   * Run the whole flow of the Kalman Filter from here.
@@ -29,7 +27,7 @@ public:
   /**
   * A helper method to calculate RMSE.
   */
-  Eigen::Vector4d CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations, const std::vector<Eigen::VectorXd> &ground_truth);
+  Vector4d CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth);
 
   /**
   * Kalman Filter update and prediction math lives in here.
@@ -37,27 +35,15 @@ public:
   KalmanFilter ekf_;
 
 private:
-  // check whether the tracking toolbox was initiallized or not (first measurement)
-  bool is_initialized_;
+  void initialize(const MeasurementPackage& measurement_pack);
+  Matrix<double, 3, 4> CalculateJacobian(const VectorXd& x_state); // A helper method to calculate Jacobians.
 
-  // previous timestamp
+  bool is_initialized_;   // check whether the tracking toolbox was initiallized or not (first measurement)
   long long previous_timestamp_;
-
-  // tool object used to compute Jacobian and RMSE
-  //Tools tools;
 
   // noise
   double noise_ax_;
   double noise_ay_;
-
-  // initialize
-  void initialize(const MeasurementPackage& measurement_pack);
-
-  /**
-  * A helper method to calculate Jacobians.
-  */
-  Eigen::Matrix<double, 3, 4> CalculateJacobian(const Eigen::VectorXd& x_state);
-
 };
 
 #endif /* FusionEKF_H_ */

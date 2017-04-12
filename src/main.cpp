@@ -60,7 +60,6 @@ void read_data(std::ifstream &in_file, std::vector<MeasurementPackage> &measurem
     istringstream iss(line);
     long long timestamp;
 
-    // reads first element from the current line
     iss >> sensor_type;
     if (sensor_type.compare("L") == 0) {  // LASER MEASUREMENT
       // read measurements at this timestamp
@@ -154,7 +153,6 @@ int main(int argc, char* argv[]) {
   }
 
   // compute the accuracy (RMSE)
-  //Tools tools;
   VectorXd rmse(fusionEKF.CalculateRMSE(estimations, ground_truth));
 
   //cout << "Accuracy - RMSE:" << endl << rmse << endl;
@@ -163,13 +161,8 @@ int main(int argc, char* argv[]) {
 	  cout << rmse[i] << endl;
 
   // close files
-  if (out_file_.is_open()) {
-    out_file_.close();
-  }
-
-  if (in_file_.is_open()) {
-    in_file_.close();
-  }
+  if (out_file_.is_open()) out_file_.close();
+  if (in_file_.is_open()) in_file_.close();
 
   return 0;
 }
