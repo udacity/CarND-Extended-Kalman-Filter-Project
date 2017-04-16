@@ -132,26 +132,34 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
        * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
      */
 
+    //if dt is very small (i.e. two measurements are approximately coincident in time),
+    // we should not make a prediction as it can led to arithmetic problems
+    // this is a suggested update.
+
     float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
-    float noise_ax = 9;
-    float noise_ay = 9;
 
-    float dt_2 = dt * dt;
-    float dt_3 = dt_2 * dt;
-    float dt_4 = dt_3 * dt;
+    if (dt > 0.001) {
 
-    previous_timestamp_ = measurement_pack.timestamp_;
+        float noise_ax = 9;
+        float noise_ay = 9;
 
-    //Modify the F matrix so that the time is integrated
-    ekf_.F_(0, 2) = dt;
-    ekf_.F_(1, 3) = dt;
+        float dt_2 = dt * dt;
+        float dt_3 = dt_2 * dt;
+        float dt_4 = dt_3 * dt;
 
-    ekf_.Q_ << dt_4 / 4 * noise_ax, 0, dt_3 / 2 * noise_ax, 0,
-            0, dt_4 / 4 * noise_ay, 0, dt_3 / 2 * noise_ay,
-            dt_3 / 2 * noise_ax, 0, dt_2 * noise_ax, 0,
-            0, dt_3 / 2 * noise_ay, 0, dt_2 * noise_ay;
+        previous_timestamp_ = measurement_pack.timestamp_;
 
-    ekf_.Predict();
+        //Modify the F matrix so that the time is integrated
+        ekf_.F_(0, 2) = dt;
+        ekf_.F_(1, 3) = dt;
+
+        ekf_.Q_ << dt_4 / 4 * noise_ax, 0, dt_3 / 2 * noise_ax, 0,
+                0, dt_4 / 4 * noise_ay, 0, dt_3 / 2 * noise_ay,
+                dt_3 / 2 * noise_ax, 0, dt_2 * noise_ax, 0,
+                0, dt_3 / 2 * noise_ay, 0, dt_2 * noise_ay;
+
+        ekf_.Predict();
+    }
 
     /*****************************************************************************
      *  Update
