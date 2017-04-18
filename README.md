@@ -24,7 +24,7 @@ Self-Driving Car Engineer Nanodegree Program
    * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
 4. Run it: `./ExtendedKF path/to/input.txt path/to/output.txt`. You can find
    some sample inputs in 'data/'.
-    - eg. `./ExtendedKF ../data/sample-laser-radar-measurement-data-1.txt output.txt`
+    - eg. `./ExtendedKF ../data/obj_pose-laser-radar-synthetic-input.txt`
 
 ## Editor Settings
 
