@@ -60,7 +60,7 @@ First you would need to configure your profile for debugging.
 
 ![Arguments tab](images/arguments_tab.png)
 
-4. Add new item to the "Arguments passed on launch" section: `../../../data/sample-laser-radar-measurement-data-2.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
+4. Add new item to the "Arguments passed on launch" section: `../../../data/obj_pose-laser-radar-synthetic-input.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
 
 ![Arguments tab](images/arguments_selection.png)
 
