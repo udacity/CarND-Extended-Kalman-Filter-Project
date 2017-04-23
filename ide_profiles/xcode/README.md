@@ -10,7 +10,7 @@ First, you need to install `cmake`. One way to do it is through downloading "CMa
 
 Then you would need to add `cmake` to a command line. To do so for the current session, execute the following command: `PATH="/Applications/CMake.app/Contents/bin":"$PATH"`.
 
-Finally, to generate Xcode IDE profile, execute the following command in the current directory: `cmake -G "Xcode" ../..`.
+Finally, to generate Xcode IDE profile, navigate to the directory of this README and execute the following command: `cmake -G "Xcode" ../..`.
 
 ```
 MacBook-Pro:xcode denyskrut$ PATH="/Applications/CMake.app/Contents/bin":"$PATH"
@@ -60,7 +60,7 @@ First you would need to configure your profile for debugging.
 
 ![Arguments tab](images/arguments_tab.png)
 
-4. Add new item to the "Arguments passed on launch" section: `../../../data/sample-laser-radar-measurement-data-2.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
+4. Add new item to the "Arguments passed on launch" section: `../../../data/obj_pose-laser-radar-synthetic-input.txt ../../../data/output.txt`. This would be the parameters that you pass to your program. You can edit it later on, to test for different set of inputs.
 
 ![Arguments tab](images/arguments_selection.png)
 
