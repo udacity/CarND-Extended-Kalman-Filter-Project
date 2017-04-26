@@ -1,17 +1,22 @@
+#include <stdlib.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <stdlib.h>
 #include "Eigen/Dense"
 #include "FusionEKF.h"
 #include "ground_truth_package.h"
 #include "measurement_package.h"
 
-using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ifstream;
+using std::ofstream;
+using std::string;
 
 void check_arguments(int argc, char* argv[]) {
   string usage_instructions = "Usage instructions: ";
@@ -36,8 +41,8 @@ void check_arguments(int argc, char* argv[]) {
   }
 }
 
-void check_files(ifstream& in_file, string& in_name,
-                 ofstream& out_file, string& out_name) {
+void check_files(ifstream& in_file, const string& in_name,
+                 ofstream& out_file, const string& out_name) {
   if (!in_file.is_open()) {
     cerr << "Cannot open input file: " << in_name << endl;
     exit(EXIT_FAILURE);
@@ -50,7 +55,6 @@ void check_files(ifstream& in_file, string& in_name,
 }
 
 int main(int argc, char* argv[]) {
-
   check_arguments(argc, argv);
 
   string in_file_name_ = argv[1];
@@ -69,12 +73,11 @@ int main(int argc, char* argv[]) {
   // prep the measurement packages (each line represents a measurement at a
   // timestamp)
   while (getline(in_file_, line)) {
-
     string sensor_type;
     MeasurementPackage meas_package;
     GroundTruthPackage gt_package;
-    istringstream iss(line);
-    long long timestamp;
+    std::istringstream iss(line);
+    int64_t timestamp;
 
     // reads first element from the current line
     iss >> sensor_type;
@@ -131,7 +134,7 @@ int main(int argc, char* argv[]) {
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
 
-  //Call the EKF-based fusion
+  // Call the EKF-based fusion
   size_t N = measurement_pack_list.size();
   for (size_t k = 0; k < N; ++k) {
     // start filtering from the second frame (the speed is unknown in the first
@@ -153,8 +156,8 @@ int main(int argc, char* argv[]) {
       // output the estimation in the cartesian coordinates
       float ro = measurement_pack_list[k].raw_measurements_(0);
       float phi = measurement_pack_list[k].raw_measurements_(1);
-      out_file_ << ro * cos(phi) << "\t"; // p1_meas
-      out_file_ << ro * sin(phi) << "\t"; // ps_meas
+      out_file_ << ro * cos(phi) << "\t";  // p1_meas
+      out_file_ << ro * sin(phi) << "\t";  // ps_meas
     }
 
     // output the ground truth packages
@@ -169,7 +172,8 @@ int main(int argc, char* argv[]) {
 
   // compute the accuracy (RMSE)
   Tools tools;
-  cout << "Accuracy - RMSE:" << endl << tools.CalculateRMSE(estimations, ground_truth) << endl;
+  cout << "Accuracy - RMSE:" << endl
+       << tools.CalculateRMSE(estimations, ground_truth) << endl;
 
   // close files
   if (out_file_.is_open()) {
