@@ -18,22 +18,33 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 }
 
 void KalmanFilter::Predict() {
-  /**
-  TODO:
-    * predict the state
-  */
+  x_ = F_ * x_;
+  P_ = F_ * P_ * F_.transpose() + Q_;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Kalman Filter equations
-  */
+  VectorXd y = z - H_ * x_;
+  MatrixXd Ht = H_.transpose();
+  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd K = P_ * Ht * S.inverse();
+  
+  x_ = x_ + K * y;
+  MatrixXd KH = K * H_;
+  MatrixXd I = MatrixXd(KH.rows(), KH.cols());
+  
+  P_ = (I - KH) * P_;
+  
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Extended Kalman Filter equations
-  */
+  VectorXd y = z - tools.TransformCartesianToPolar(x_);
+  MatrixXd Ht = H_.transpose();
+  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd K = P_ * Ht * S.inverse();
+  
+  x_ = x_ + K * y;
+  MatrixXd KH = K * H_;
+  MatrixXd I = MatrixXd(KH.rows(), KH.cols());
+  
+  P_ = (I - KH) * P_;
 }

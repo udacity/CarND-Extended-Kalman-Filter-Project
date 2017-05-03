@@ -41,13 +41,13 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   
   MatrixXd Hj(3,4);
   //recover state parameters
-  float px = x_state(0);
-  float py = x_state(1);
-  float vx = x_state(2);
-  float vy = x_state(3);
+  double px = x_state(0);
+  double py = x_state(1);
+  double vx = x_state(2);
+  double vy = x_state(3);
   
   //TODO: OPTIMIZE This later
-  float denom = px * px + py * py;
+  double denom = px * px + py * py;
   if (denom == 0) {
     return Hj;
   }
@@ -59,4 +59,27 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   py*(vx*py-vy*px)/pow(denom, 1.5), px*(vy*px-vx*py)/pow(denom, 1.5), px/sqrt(denom), py/sqrt(denom);
   
   return Hj;
+}
+
+Eigen::VectorXd TransformCartesianStateToPolar(const Eigen::VectorXd& x_state) {
+  VectorXd zp(3);
+  double px = x_state(0);
+  double py = x_state(1);
+  double vx = x_state(2);
+  double vy = x_state(3);
+  
+  double rho = sqrt(px*px + py*py);
+  double phi = atan2(py, px);
+  double rhodot;
+  if (rho == 0) {
+    rhodot = 0.0;
+  } else {
+    rhodot = (px*vx + py*vy) / rho;
+  }
+  
+  zp(0) = rho;
+  zp(1) = phi;
+  zp(2) = rhodot;
+  
+  return zp;
 }
