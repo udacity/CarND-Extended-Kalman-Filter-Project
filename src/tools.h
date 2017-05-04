@@ -25,7 +25,9 @@ public:
   */
   Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd& x_state);
   
-  Eigen::VectorXd TransformCartesianToPolar(const Eigen::VectorXd& z);
+  Eigen::VectorXd TransformCartesianStateToPolar(const Eigen::VectorXd& z);
+
+  double normalizeAngle(double phi);
 
 };
 

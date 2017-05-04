@@ -26,8 +26,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   
   //accumulate squared residuals
   for(int i=0; i < estimations.size(); ++i){
-    VectorXd diff = (estimations[i] - ground_truth[i]).array();
-    diff = diff * diff;
+    VectorXd diff = (estimations[i] - ground_truth[i]);
+    diff = diff.array() * diff.array();
     rmse = rmse + diff;
   }
   
@@ -48,7 +48,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   
   //TODO: OPTIMIZE This later
   double denom = px * px + py * py;
-  if (denom == 0) {
+  if (abs(denom) < 0.0001) {
     return Hj;
   }
   //check division by zero
@@ -61,7 +61,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   return Hj;
 }
 
-Eigen::VectorXd TransformCartesianStateToPolar(const Eigen::VectorXd& x_state) {
+VectorXd Tools::TransformCartesianStateToPolar(const Eigen::VectorXd& x_state) {
   VectorXd zp(3);
   double px = x_state(0);
   double py = x_state(1);
@@ -82,4 +82,14 @@ Eigen::VectorXd TransformCartesianStateToPolar(const Eigen::VectorXd& x_state) {
   zp(2) = rhodot;
   
   return zp;
+}
+
+double Tools::normalizeAngle(double phi) {
+  while (phi < (-1 *M_PI)) {
+    phi = phi + 2*M_PI;
+  }
+  while (phi > M_PI) {
+    phi = phi - 2*M_PI;
+  }
+  return phi;
 }

@@ -114,6 +114,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
   double dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+  previous_timestamp_ = measurement_pack.timestamp_;
   double dt2 = dt * dt;
   double dt3 = dt2 * dt;
   double dt4 = dt3 * dt;
@@ -146,7 +147,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     Hj_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.R_ = R_radar_;
     ekf_.H_ = Hj_;
-    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_, tools.TransformCartesianStateToPolar(ekf_.x_));
   } else {
     // Laser updates
     ekf_.H_ = H_laser_;

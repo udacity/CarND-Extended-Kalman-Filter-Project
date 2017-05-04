@@ -1,7 +1,9 @@
 #include "kalman_filter.h"
-
+#include <iostream>
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+
+using namespace std;
 
 KalmanFilter::KalmanFilter() {}
 
@@ -30,21 +32,22 @@ void KalmanFilter::Update(const VectorXd &z) {
   
   x_ = x_ + K * y;
   MatrixXd KH = K * H_;
-  MatrixXd I = MatrixXd(KH.rows(), KH.cols());
+  MatrixXd I = MatrixXd::Identity(KH.rows(), KH.cols());
   
   P_ = (I - KH) * P_;
-  
 }
 
-void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  VectorXd y = z - tools.TransformCartesianToPolar(x_);
+void KalmanFilter::UpdateEKF(const Eigen::VectorXd &z, const Eigen::VectorXd &zest) {
+  VectorXd y = z - zest;
+  double phi = y(1);
+  y(1) = tools.normalizeAngle(phi);
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd K = P_ * Ht * S.inverse();
   
   x_ = x_ + K * y;
   MatrixXd KH = K * H_;
-  MatrixXd I = MatrixXd(KH.rows(), KH.cols());
+  MatrixXd I = MatrixXd::Identity(KH.rows(), KH.cols());
   
   P_ = (I - KH) * P_;
 }
