@@ -48,15 +48,18 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   
   //TODO: OPTIMIZE This later
   double denom = px * px + py * py;
-  if (abs(denom) < 0.0001) {
+  double sqrt_denom = sqrt(denom);
+  double pow32_denom = denom * sqrt(denom);
+  if (abs(pow32_denom) < 0.0001) {
+    // cout << "Failed. too small denom";
     return Hj;
   }
   //check division by zero
   
   //compute the Jacobian matrix
-  Hj <<   px / sqrt(denom), py/sqrt(denom), 0, 0,
-  -1 * py / denom, px/denom, 0, 0,
-  py*(vx*py-vy*px)/pow(denom, 1.5), px*(vy*px-vx*py)/pow(denom, 1.5), px/sqrt(denom), py/sqrt(denom);
+  Hj <<   px / sqrt_denom,              py/sqrt_denom,                0,              0,
+          -1 * py / denom,              px/denom,                     0,              0,
+          py*(vx*py-vy*px)/pow32_denom, px*(vy*px-vx*py)/pow32_denom, px/sqrt_denom,  py/sqrt_denom;
   
   return Hj;
 }
@@ -71,7 +74,7 @@ VectorXd Tools::TransformCartesianStateToPolar(const Eigen::VectorXd& x_state) {
   double rho = sqrt(px*px + py*py);
   double phi = atan2(py, px);
   double rhodot;
-  if (rho == 0) {
+  if (abs(rho) < 0.001) {
     rhodot = 0.0;
   } else {
     rhodot = (px*vx + py*vy) / rho;

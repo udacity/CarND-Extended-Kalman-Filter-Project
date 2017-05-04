@@ -61,7 +61,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
     // first measurement
-    cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
     
     const VectorXd raw = measurement_pack.raw_measurements_;
@@ -90,10 +89,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     0, 0, 1, 0,
     0, 0, 0, 1;
     ekf_.P_ = MatrixXd(4, 4);
-    ekf_.P_(0,0) = 1000;
-    ekf_.P_(1,1) = 1000;
-    ekf_.P_(2,2) = 1000;
-    ekf_.P_(3,3) = 1000;
+    // we get a decent estimate of position from the radar / laser sensor,
+    // but we have no idea about the velocity estimate. so that's why
+    // veolcity components have higher uncertainty / error
+    ekf_.P_(0,0) = 0.5;
+    ekf_.P_(1,1) = 0.5;
+    ekf_.P_(2,2) = 10;
+    ekf_.P_(3,3) = 10;
     
     previous_timestamp_ = measurement_pack.timestamp_;
     

@@ -26,6 +26,7 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
   VectorXd y = z - H_ * x_;
+  
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd K = P_ * Ht * S.inverse();
@@ -41,6 +42,7 @@ void KalmanFilter::UpdateEKF(const Eigen::VectorXd &z, const Eigen::VectorXd &ze
   VectorXd y = z - zest;
   double phi = y(1);
   y(1) = tools.normalizeAngle(phi);
+
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd K = P_ * Ht * S.inverse();
