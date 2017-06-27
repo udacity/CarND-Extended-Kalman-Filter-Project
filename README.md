@@ -53,7 +53,7 @@ OUTPUT: values provided by the c++ program to the simulator
 
 ## Basic Build Instructions
 
-1. Clone this repo.
+1. Clone this repo. `git clone https://github.com/udacity/CarND-Extended-Kalman-Filter-Project.git`
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make` 
    * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
