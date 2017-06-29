@@ -21,7 +21,6 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 void KalmanFilter::Predict() {
 
   // Predict by multiplying state transition function by x
-
   x_ = F_ * x_;
 
   // Update covariance as well
@@ -31,26 +30,26 @@ void KalmanFilter::Predict() {
 void KalmanFilter::Update(const VectorXd &z) {
 
   // Calculate. y = z − H x
-  //VectorXd y = z - H_ * x_;
+  VectorXd y = z - H_ * x_;
 
   // Update
-  //CommonKFUpdate(y);
+  CommonKFUpdate(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
   // Calculate Rho, Theta, RhoDot, for h vector
-  //double rho = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
-  //double theta = atan(x_(1) / x_(0));
-  //double rho_dot = (x_(0) * x_(2) + x_(1) * x_(3)) / rho;
-  //VectorXd h = VectorXd(3);
-  //h << rho, theta, rho_dot;
+  double rho = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
+  double theta = atan(x_(1) / x_(0));
+  double rho_dot = (x_(0) * x_(2) + x_(1) * x_(3)) / rho;
+  VectorXd h = VectorXd(3);
+  h << rho, theta, rho_dot;
 
   // Calculate y  
-  //VectorXd y = z - h;
+  VectorXd y = z - h;
 
   // Update
-  //CommonKFUpdate(y);
+  CommonKFUpdate(y);
 }
 
 void KalmanFilter::CommonKFUpdate(const VectorXd &y) {
