@@ -25,7 +25,7 @@ void KalmanFilter::Predict() {
   x_ = F_ * x_;
 
   // Update covariance as well
-//  P_ = F_ * P_ * F_.transpose() + Q_;
+  P_ = F_ * P_ * F_.transpose() + Q_;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
