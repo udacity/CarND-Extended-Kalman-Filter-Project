@@ -22,3 +22,8 @@ xcuserdata/
 *.xcscmblueprint
 ide_profiles/xcode/Debug/
 ide_profiles/xcode/ExtendedKF.build/
+
+term2_sim.app/
+CarND-Mercedes-SF-Utilities/
+
+sensor-fusion-ekf-reference.pdf
