@@ -64,6 +64,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float vx = rho_dot * cos(phi);
       float vy = rho_dot * sin(phi);
       ekf_.x_ << x, y, vx, vy;
+
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       /**
@@ -74,19 +75,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       cout << ekf_.x_ << endl << endl;
       cout << measurement_pack.raw_measurements_ << endl << endl;
     }
-
-    // Check for 0
-    //#define SMALL 0.0001 // A very small number
-    //if (fabs(ekf_.x_(0)) < SMALL and fabs(ekf_.x_(1)) < SMALL) {
-    //  ekf_.x_(0) = SMALL;
-    //  ekf_.x_(1) = SMALL;
-    //}
-
-//    R_radar_ << 0.014412589090776581, 0, 0,
-//          0, 1.3610836622321855e-06, 0,
-//          0, 0, 0.011073356944289297;
-//    R_laser_ << 0.0068374897772981421, 0,
-//          0, 0.0054887300686829819;
 
     // Initialise P
     ekf_.P_ = MatrixXd(4, 4);
@@ -118,11 +106,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
              0, 0, 0, 1;
 
   // Calculate Q noise matrix
-  float noise_ax = 9.0;
-  float noise_ay = 9.0;
-  float dt_2 = dt * dt;
-  float dt_3 = dt_2 * dt;
-  float dt_4 = dt_3 * dt;
+  const float noise_ax = 9.0;
+  const float noise_ay = 9.0;
+  const float dt_2 = dt * dt;
+  const float dt_3 = dt_2 * dt;
+  const float dt_4 = dt_3 * dt;
   ekf_.Q_ = MatrixXd(4, 4);
   ekf_.Q_ << (dt_4 / 4.0) * noise_ax, 0, (dt_3 / 2.0) * noise_ax, 0,
           0, (dt_4 / 4.0) * noise_ay, 0, (dt_3 / 2.0) * noise_ay,

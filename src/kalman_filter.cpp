@@ -46,6 +46,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
   // Calculate y  
   VectorXd y = z - h;
+  y(1) = std::atan2(sin(y(1)), cos(y(1)));
 
   // Update
   CommonKFUpdate(y);
