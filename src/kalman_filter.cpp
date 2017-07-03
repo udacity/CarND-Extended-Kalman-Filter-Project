@@ -1,5 +1,4 @@
 #include "kalman_filter.h"
-#include <fstream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -40,7 +39,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
   // Calculate Rho, Theta, RhoDot, for h vector
   double rho = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
-  double theta = atan(x_(1) / x_(0));
+  double theta = std::atan2(x_(1), x_(0));
   double rho_dot = (x_(0) * x_(2) + x_(1) * x_(3)) / rho;
   VectorXd h = VectorXd(3);
   h << rho, theta, rho_dot;
