@@ -63,13 +63,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
-   if (!is_initialized_ &&
-      measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-        ekf_.x_ = VectorXd(4);
-
-    ekf_.x_ << 0, 0.5, 0, 0;
-    return;
-  }
    
   if (!is_initialized_) {
     /**
@@ -81,7 +74,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // first measurement
     cout << "EKF: " << endl;
     ekf_.x_ = VectorXd(4);
-    
+    ekf_.x_ << 1, 1, 1, 1;
   float px;
   float py;
   float vx;
@@ -103,7 +96,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       vy = rho_d * sin(phi);
        
       ekf_.x_ << px, py, vx, vy;
-      std::cout << "Radar init	" << ekf_.x_ << std::endl;
+ 
       
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
@@ -115,8 +108,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       vx = 0.0;
       vy = 0.0;
       
-      ekf_.x_ << px, py, vx, vy;  
-      std::cout << "Laser init	" << ekf_.x_ << std::endl; 
+      ekf_.x_ << px, py, vx, vy;   
     }
 
     // done initializing, no need to predict or update
@@ -137,7 +129,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
    
     ekf_.F_ = MatrixXd(4, 4);
-    ekf_.F_ = MatrixXd::Zero(4, 4);  // don't forget to init the Matrix with 0 !
+    ekf_.F_ = MatrixXd::Zero(4, 4);
     ekf_.F_ << 1, 0, 1, 0,
 	0, 1, 0, 1,
 	0, 0, 1, 0,
@@ -148,7 +140,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     0, 1;
     
     ekf_.Q_ = MatrixXd(4, 4);
-    ekf_.Q_ = MatrixXd::Zero(4, 4);  // don't forget to init the Matrix with 0 !
+    ekf_.Q_ = MatrixXd::Zero(4, 4);
     float px;
     float py;
     float vx;
@@ -194,10 +186,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       VectorXd z_Radar(3); 
       float rho = measurement_pack.raw_measurements_[0];
       float phi = measurement_pack.raw_measurements_[1];
-      std::cout << "phi  measured" << phi << std::endl;
       float rho_d = measurement_pack.raw_measurements_[2];
  
       z_Radar << rho, phi , rho_d;
+      // Update R_ and H_ with H jacobian and R matrix for Radar. 
       ekf_.R_ = R_radar_;
       ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
       
@@ -211,6 +203,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float py = measurement_pack.raw_measurements_[1];
 	  
 	  z_Laser << px, py;
+	  // Update R_ and H_ with specific H and R matrix for Laser.
 	  ekf_.R_ = R_laser_;
 	  ekf_.H_ = H_laser_;
 	  

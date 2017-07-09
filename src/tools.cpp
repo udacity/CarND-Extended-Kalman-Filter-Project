@@ -19,7 +19,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   rmse << 0,0,0,0;
   // Data validation.
   if (estimations.size() == 0 || estimations.size() != ground_truth.size()) {
-	  cout << "ERROR: No Values or missing Values!! ";
+	  //cout << "ERROR: No Values or missing Values!! ";
       return rmse;
   }
   // Evaluate Sum estimations - ground_truth ^2
@@ -41,28 +41,27 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   TODO:
     * Calculate a Jacobian here.
   */
-  	MatrixXd Hj(3,4);
+	MatrixXd Hj(3,4);
 	//recover state parameters
 	float px = x_state(0);
 	float py = x_state(1);
 	float vx = x_state(2);
 	float vy = x_state(3);
-
-	//pre-compute a set of terms to avoid repeated calculation
-	float c1 = px*px+py*py;
-	float c2 = sqrt(c1);
-	float c3 = (c1*c2);
-
-	//check division by zero
-	if(fabs(c1) < 0.0001){
-		cout << "CalculateJacobian () - Error - Division by Zero" << endl;
-		return Hj;
+    // Calculate terms
+	float Spx2py2 = sqrt((pow(px,2)+pow(py,2)));
+	float px2py2 = (pow(px,2)+pow(py,2));
+	float px2py2a32 =  sqrt(pow((pow(px,2)+pow(py,2)),3));
+	float pyv = py*(vx*py-vy*px);
+	float pxv = px*(vy*px-vx*py);
+	// check division by zero
+	if ((Spx2py2 || px2py2 || px2py2a32) == 0 ){
+		//cout << "ERROR: Zero Division";
 	}
-
+	else {
 	//compute the Jacobian matrix
-	Hj << (px/c2), (py/c2), 0, 0,
-		  -(py/c1), (px/c1), 0, 0,
-		  py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3, px/c2, py/c2;
-
+	Hj << 	px / Spx2py2, py / Spx2py2, 0, 0,
+			-(py / px2py2), px / px2py2, 0, 0,
+			pyv / px2py2a32, pxv / px2py2a32, px / Spx2py2, py / Spx2py2;
+	}
 	return Hj;
 }
