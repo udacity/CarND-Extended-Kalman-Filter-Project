@@ -22,3 +22,7 @@ xcuserdata/
 *.xcscmblueprint
 ide_profiles/xcode/Debug/
 ide_profiles/xcode/ExtendedKF.build/
+
+# CLion generated directories
+.idea/
+cmake-build-debug/
