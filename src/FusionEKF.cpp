@@ -84,16 +84,20 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-    } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-      //cout << "Kalman Filter Initialization from LASER" << endl;
+      ekf_.x_ <<
+          measurement_pack.raw_measurements_[0] * cos(measurement_pack.raw_measurements_[1]),
+          measurement_pack.raw_measurements_[0] * sin(measurement_pack.raw_measurements_[1]),
+          0,
+          0;
 
+    } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       //set the state with the initial location and zero velocity
       ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
 
     }
-    previous_timestamp_ = measurement_pack.timestamp_;
 
     // done initializing, no need to predict or update
+    previous_timestamp_ = measurement_pack.timestamp_;
     is_initialized_ = true;
     return;
   }
@@ -135,7 +139,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    // Radar updates
+    try {
+      ekf_.R_ = R_radar_;
+      ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
+      ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    } catch (overflow_error &e) {
+      cout << "Skipping radar update: " << e.what() << endl;
+    }
   } else {
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;

@@ -42,7 +42,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     //TODO: YOUR CODE HERE
     double px2py2 = px*px + py*py;
     //check division by zero/overflow
-    if (px2py2 > 0.000001) {
+    if (px2py2 > 0.0001) {
         //compute the Jacobian matrix
         double sqr = sqrt(px2py2);
         double sqr3 = pow(sqr,3);

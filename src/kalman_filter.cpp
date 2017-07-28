@@ -1,4 +1,9 @@
 #include "kalman_filter.h"
+#include <iostream>
+
+#define TWO_PI (2.0*M_PI)
+
+using namespace std;
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -25,8 +30,26 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
 
-  VectorXd z_pred = H_ * x_;
-  VectorXd y = z - z_pred;
+  VectorXd y = z - H_*x_;
+  update_(y);
+}
+
+void KalmanFilter::UpdateEKF(const VectorXd &z) {
+  double px2py2 = x_[0]*x_[0] + x_[1]*x_[1];
+  if (abs(x_[0]) > 0.0001 && px2py2 > 0.0001) {
+    double sqr = sqrt(px2py2);
+    VectorXd z_pred = VectorXd(3);
+    z_pred << sqr, atan2(x_[1], x_[0]), (x_[0]*x_[2] + x_[1]*x_[3])/sqr;
+    VectorXd y = z - z_pred;
+    //Normalize phi
+    y[1] -= trunc(y[1]/TWO_PI) * TWO_PI;
+    update_(y);
+  } else {
+    cout << "Skipping update to avoid overflow/division by zero" << endl;
+  }
+}
+
+void KalmanFilter::update_(const Eigen::VectorXd &y){
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
@@ -38,11 +61,6 @@ void KalmanFilter::Update(const VectorXd &z) {
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K * H_) * P_;
- }
 
-void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Extended Kalman Filter equations
-  */
 }
+
