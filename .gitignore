@@ -1,6 +1,11 @@
 # silly macOS
 .DS_Store
 
+__pycache__
+*.pyc
+extended-kalman-filter-*.zip
+extended-kalman-filter-result-*.json
+
 # build files
 build/
 
