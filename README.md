@@ -93,13 +93,10 @@ for instructions and the project rubric.
 
 * You don't have to follow this directory structure, but if you do, your work
   will span all of the .cpp files here. Keep an eye out for TODOs.
-* Student's have reported rapid expansion of log files when using the term 2 simulator. 
-This appears to be associated with not being connected to uWebSockets.  If this does occur
-please make sure you are conneted to uWebSockets. The following workaround may also be effective
-at preventing large log files.
+* Students have reported rapid expansion of log files when using the term 2 simulator.  This appears to be associated with not being connected to uWebSockets.  If this does occur,  please make sure you are conneted to uWebSockets. The following workaround may also be effective at preventing large log files.
 
     + create an empty log file
-    + remove write permissions s0 that the simulator can't write to log
+    + remove write permissions so that the simulator can't write to log
 
 ## Call for IDE Profiles Pull Requests
 
