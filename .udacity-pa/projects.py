@@ -12,8 +12,11 @@ def submit(args):
 
   default_filenames = [
     'src/FusionEKF.cpp',
+    'src/FusionEKF.h',
     'src/kalman_filter.cpp',
-    'src/tools.cpp'
+    'src/kalman_filter.h',
+    'src/tools.cpp',
+    'src/tools.h'
   ]
 
   if len(local_args.filenames) == 0:
