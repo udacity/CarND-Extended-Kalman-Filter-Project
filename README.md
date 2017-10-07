@@ -99,6 +99,7 @@ for instructions and the project rubric.
 
     + create an empty log file
     + remove write permissions so that the simulator can't write to log
+ * Please note that the ```Eigen``` library does not initialize ```VectorXd``` or ```MatrixXd``` objects with zeros upon creation.
 
 ## Call for IDE Profiles Pull Requests
 
