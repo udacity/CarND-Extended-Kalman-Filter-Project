@@ -13,4 +13,4 @@ make
 sudo make install
 cd ..
 cd ..
-sudo rm -r uWebSockets
+rm -r uWebSockets
