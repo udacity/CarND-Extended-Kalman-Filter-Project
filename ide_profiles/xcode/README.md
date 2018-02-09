@@ -10,7 +10,7 @@ First, you need to install `cmake`. One way to do it is through downloading "CMa
 
 Then you would need to add `cmake` to a command line. To do so for the current session, execute the following command: `PATH="/Applications/CMake.app/Contents/bin":"$PATH"`.
 
-Finally, to generate Xcode IDE profile, execute the following command in the current directory: `cmake -G "Xcode" ../..`.
+Finally, to generate Xcode IDE profile, navigate to the directory of this README and execute the following command: `cmake -G "Xcode" ../..`.
 
 ```
 MacBook-Pro:xcode denyskrut$ PATH="/Applications/CMake.app/Contents/bin":"$PATH"
