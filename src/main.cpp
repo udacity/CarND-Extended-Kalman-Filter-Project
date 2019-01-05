@@ -1,6 +1,8 @@
+#include <cstdlib>
 #include <math.h>
-#include <uWS/uWS.h>
 #include <iostream>
+
+#include <uWS/uWS.h>
 #include "json.hpp"
 #include "FusionEKF.h"
 #include "tools.h"
@@ -150,13 +152,14 @@ int main() {
 
   }); // end h.onMessage
 
-  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
+  h.onConnection([](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
     std::cout << "Connected!!!" << std::endl;
   });
 
-  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, 
+  h.onDisconnection([](uWS::WebSocket<uWS::SERVER> ws, int code, 
                          char *message, size_t length) {
     std::cout << "Disconnected" << std::endl;
+    std::exit(0);
   });
 
   int port = 4567;
