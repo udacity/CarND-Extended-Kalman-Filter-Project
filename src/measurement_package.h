@@ -4,10 +4,10 @@
 #include "Eigen/Dense"
 
 class MeasurementPackage {
-public:
+ public:
   long timestamp_;
 
-  enum SensorType{
+  enum SensorType {
     LASER,
     RADAR
   } sensor_type_;

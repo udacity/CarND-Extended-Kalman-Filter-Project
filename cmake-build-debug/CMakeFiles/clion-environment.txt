@@ -1,1 +1,3 @@
-CMake: 3.6.3@/Applications/CLion.app/Contents/bin/cmake/bin/cmake
+ToolSet: 1.0 (local)Options: 
+
+Options:-DCMAKE_TOOLCHAIN_FILE=/Users/tianzi/vcpkg/scripts/buildsystems/vcpkg.cmake

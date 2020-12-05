@@ -1,5 +1,5 @@
-# Extended Kalman Filter Project Starter Code
-Self-Driving Car Engineer Nanodegree Program
+# Extended Kalman Filter with Google Cloud Pub/Sub
+This project was originally homework from the [Udacity Self-Driving Car Engineer Nanodegree] Program. I re-purposed it for a [Medium article] to show how to use [Pub/Sub] with Kalman Filters.
 
 ---
 
@@ -16,69 +16,117 @@ Self-Driving Car Engineer Nanodegree Program
   * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
 
-## Basic Build Instructions
+## Pub/Sub setup
+
+1. Install the [Cloud SDK].
+
+1. Create a new Google Cloud project via the [*New Project*] page.
+
+1. [Enable billing].
+
+1. Initialize the Cloud SDK to your GCP project.
+
+   ```shell script
+   gcloud init
+   ```
+
+1. [Enable the API](https://console.cloud.google.com/flows/enableapi?apiid=pubsub): Pub/Sub.
+
+1. Create a service account JSON key via the [*Create service account key*] page.
+
+   * From the **Service account** list, select **New service account**.
+   * In the **Service account name** field, enter a name.
+   * From the **Role** list, select **Project > Owner** **(*)**.
+   * Click **Create**. A JSON file that contains your key downloads to your computer.
+
+1. Set your `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to your service account key file.
+
+   ```shell script
+   export GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
+   ```
+
+1. Create a Pub/Sub topic and subscription.
+
+    ```bash
+    gcloud pubsub topics create my-topic
+    gcloud pubsub subscriptions create my-subscription --topic=my-topic --enable-message-ordering
+    ```
+   
+1. Additional step for the Pub/Sub C++ client library if you are on MacOS or Windows. Download gRPC SSL certificates and set the environment variable `GRPC_DEFAULT_SSL_ROOTS_FILE_PATH`.
+   - MacOS 
+    ```shell script
+    curl -Lo roots.pem https://raw.githubusercontent.com/grpc/grpc/master/etc/roots.pem
+    export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH="$PWD/roots.pem"
+    ```
+   - Windows
+   ```shell script
+    @powershell -NoProfile -ExecutionPolicy unrestricted -Command ^
+        (new-object System.Net.WebClient).Downloadfile( ^
+            'https://raw.githubusercontent.com/grpc/grpc/master/etc/roots.pem', ^
+            'roots.pem')
+    set GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=%cd%\roots.pem
+    ```
+
+## Build Instructions
 
 1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./ExtendedKF path/to/input.txt path/to/output.txt`. You can find
-   some sample inputs in 'data/'.
-    - eg. `./ExtendedKF ../data/sample-laser-radar-measurement-data-1.txt output.txt`
+1. Make a new CMake Project.
+   - CLion:
+     - Go to Files > New CMake Project from Sources.
+       ![img](pics/sources.png)
+     - Install `google-cloud-cpp` using [vcpkg]. 
+       ```shell script
+       cd $HOME/vcpkg
+       ./vcpkg install google-cloud-cpp
+       ```
+     - Configure CMake for your project.
+       - Using the CLI:
+         ```shell script
+         cmake -H. -B.build -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake
+         ```
+       - Using the UI: ![img](pics/cmake.png)
+1. Compile: `cmake --build .build`
+1. Publish some messages with an ordering key.
 
-## Editor Settings
-
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
-
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+   ```shell script
+   # Publishes messages synchronously (slow way).
+   ./publish.sh
+   
+   # Publishes messages asynchronously (fast way)
+   python publish_data.py
+   ```
+1. Run the EKF: `./ExtendedKF your-project-id your-subscription-id`
+   ![img](pics/KF.gif)
 
 ## Code Style
 
 Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
 
-## Generating Additional Data
+## Generating Additional Data (Optional)
 
-This is optional!
+If you'd like to generate your own radar and lidar data, see the [utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for Matlab scripts that can generate additional data.
 
-If you'd like to generate your own radar and lidar data, see the
-[utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
-Matlab scripts that can generate additional data.
 
-## Project Instructions and Rubric
+## IDE Profiles Pull Requests
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+If you've created a profile for an IDE that you think others would appreciate, add the requisite profile files and instructions to ide_profiles/. For example, if you want to add a VS Code profile, you would add:
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/12dd29d8-2755-4b1b-8e03-e8f16796bea8)
-for instructions and the project rubric.
+* `/ide_profiles/vscode/.vscode`
+* `/ide_profiles/vscode/README.md`
 
-## Hints!
+The README should explain what the profile does, how to take advantage of it, and how to install it.
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+[Udacity Self-Driving Car Engineer Nanodegree]: https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013
+[Medium article]: https://medium.com/@anguillanneuf/about
+[Pub/Sub]: https://cloud.google.com/pubsub/docs
 
-## Call for IDE Profiles Pull Requests
+[Cloud SDK]: https://cloud.google.com/sdk/docs
+[Cloud Shell]: https://console.cloud.google.com/cloudshell/editor/
+[*New Project*]: https://console.cloud.google.com/projectcreate
+[Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project/
+[*Create service account key*]: https://console.cloud.google.com/apis/credentials/serviceaccountkey/
+[GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam/
+[Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts/
+[Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts/
 
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
-
-However! We'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Regardless of the IDE used, every submitted project must
-still be compilable with cmake and make.
+[vcpkg]: https://github.com/Microsoft/vcpkg.git

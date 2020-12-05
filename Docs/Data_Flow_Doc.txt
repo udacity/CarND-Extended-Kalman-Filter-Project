@@ -11,19 +11,20 @@ The Input file format is:
 Example:
 R	8.60363	0.0290616	-2.99903	1477010443399637	8.6	0.25	-3.00029	0
 L	8.45	0.25	1477010443349642	8.45	0.25	-3.00027	0
-	
-2) The EKF Algorithm reads form file reads all the lines and generates measurement structures
-3) The MeasurementProcessor() is called with individual measurements (one by one). The results are saved
-(Attention: no file processing routines are used inside MeasurementProcessor() all the file processing routines are in the main function
-So the data read/write is decoupled from the algorithm
-4) The results are saved in an output file:
-"data/obj_pose-laser-radar-ekf-output.txt"
+
+2) The Python script publishes the laser and radar data with an ordering key to a Pub/Sub topic.
+2) The EKF Algorithm receives all the laser and radar in order from a Pub/Sub subscription.
+3) The MeasurementProcessor() is called with individual measurements (one by one).
+4) The results are printed in the standard output. The program sends an ack to Pub/Sub for each message with laser and radar data.
 
 Output file format:
-est_px est_py est_vx est_vy meas_px meas_py gt_px gt_py gt_vx gt_vy
+PREDICTION: est_px est_py est_vx est_vy
+ACCURACY - RMSE: rmse_px rmse_py rmse_vx rmse_vy
+# ACK'ED: number
 
 Example:
-4.53271	0.279	-0.842172	53.1339	4.29136	0.215312	2.28434	0.226323
-43.2222	2.65959	0.931181	23.2469	4.29136	0.215312	2.28434	0.226323
+PREDICTION: 11.371	-1.87678	0.735492	2.68477
+Accuracy - RMSE: 0.0645063	0.0623245	0.531467	0.546923
+# ACK'ED: 1224
 
  

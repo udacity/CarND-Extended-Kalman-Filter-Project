@@ -2,7 +2,10 @@
 .DS_Store
 
 # build files
-build/
+.build/
 
 # editor config
 .vscode/
+
+# cmake-build-debug
+cmake-build-debug

@@ -4,15 +4,21 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/src/FusionEKF.cpp" "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/FusionEKF.cpp.o"
-  "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/src/kalman_filter.cpp" "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/kalman_filter.cpp.o"
-  "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/src/main.cpp" "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/main.cpp.o"
-  "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/src/tools.cpp" "/Users/tz/Documents/carnd/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/tools.cpp.o"
+  "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/src/FusionEKF.cpp" "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/FusionEKF.cpp.o"
+  "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/src/kalman_filter.cpp" "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/kalman_filter.cpp.o"
+  "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/src/main.cpp" "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/main.cpp.o"
+  "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/src/tools.cpp" "/Users/tianzi/CLionProjects/CarND-Extended-Kalman-Filter-Project/cmake-build-debug/CMakeFiles/ExtendedKF.dir/src/tools.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "Clang")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "CARES_STATICLIB"
+  )
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/Users/tianzi/vcpkg/installed/x64-osx/include"
   )
 
 # Targets to which this target links.

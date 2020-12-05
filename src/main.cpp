@@ -1,184 +1,146 @@
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <vector>
 #include <stdlib.h>
 #include "Eigen/Dense"
 #include "FusionEKF.h"
 #include "ground_truth_package.h"
 #include "measurement_package.h"
+#include "google/cloud/pubsub/publisher.h"
+#include "google/cloud/pubsub/subscriber.h"
+#include "tools.h"
 
 using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
 
-void check_arguments(int argc, char* argv[]) {
-  string usage_instructions = "Usage instructions: ";
-  usage_instructions += argv[0];
-  usage_instructions += " path/to/input.txt output.txt";
+namespace pubsub = google::cloud::pubsub;
 
-  bool has_valid_args = false;
+int main(int argc, char* argv[]) try {
 
-  // make sure the user has provided input and output files
-  if (argc == 1) {
-    cerr << usage_instructions << endl;
-  } else if (argc == 2) {
-    cerr << "Please include an output file.\n" << usage_instructions << endl;
-  } else if (argc == 3) {
-    has_valid_args = true;
-  } else if (argc > 3) {
-    cerr << "Too many arguments.\n" << usage_instructions << endl;
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0]
+              << " <project-id> <subscription-id>\n";
+    return 1;
   }
 
-  if (!has_valid_args) {
-    exit(EXIT_FAILURE);
-  }
-}
+  std::string const project_id = argv[1];
+  std::string const subscription_id = argv[2];
 
-void check_files(ifstream& in_file, string& in_name,
-                 ofstream& out_file, string& out_name) {
-  if (!in_file.is_open()) {
-    cerr << "Cannot open input file: " << in_name << endl;
-    exit(EXIT_FAILURE);
-  }
+  auto receive_messages = [](pubsub::Subscriber subscriber) {
+    std::mutex mu;
+    std::condition_variable cv;
+    int message_count = 0;
+    VectorXd rmse(4);
+    rmse << 0, 0, 0, 0;
+    FusionEKF fusionEKF;
+    Tools tools;
 
-  if (!out_file.is_open()) {
-    cerr << "Cannot open output file: " << out_name << endl;
-    exit(EXIT_FAILURE);
-  }
-}
+    auto session = subscriber.Subscribe(
+        [&](pubsub::Message const& m, pubsub::AckHandler h) {
 
-int main(int argc, char* argv[]) {
+          std::cout << "\nRECEIVED: " << m.data();
 
-  check_arguments(argc, argv);
+          string a(m.data());
+          istringstream iss(a);
 
-  string in_file_name_ = argv[1];
-  ifstream in_file_(in_file_name_.c_str(), ifstream::in);
+          string sensor_type;
+          iss >> sensor_type;
+          long timestamp;
 
-  string out_file_name_ = argv[2];
-  ofstream out_file_(out_file_name_.c_str(), ofstream::out);
+          MeasurementPackage meas_package;
+          GroundTruthPackage gt_package;
 
-  check_files(in_file_, in_file_name_, out_file_, out_file_name_);
+          if (sensor_type.compare("L") == 0) {
+            // LASER MEASUREMENT
 
-  vector<MeasurementPackage> measurement_pack_list;
-  vector<GroundTruthPackage> gt_pack_list;
+            meas_package.sensor_type_ = MeasurementPackage::LASER;
+            meas_package.raw_measurements_ = VectorXd(2);
+            float x;
+            float y;
+            iss >> x;
+            iss >> y;
+            meas_package.raw_measurements_ << x, y;
+            iss >> timestamp;
+            meas_package.timestamp_ = timestamp;
 
-  string line;
+          } else if (sensor_type.compare("R") == 0) {
+            // RADAR MEASUREMENT
 
-  // prep the measurement packages (each line represents a measurement at a
-  // timestamp)
-  while (getline(in_file_, line)) {
+            meas_package.sensor_type_ = MeasurementPackage::RADAR;
+            meas_package.raw_measurements_ = VectorXd(3);
+            float ro;
+            float phi;
+            float ro_dot;
+            iss >> ro;
+            iss >> phi;
+            iss >> ro_dot;
+            meas_package.raw_measurements_ << ro, phi, ro_dot;
+            iss >> timestamp;
+            meas_package.timestamp_ = timestamp;
+          }
 
-    string sensor_type;
-    MeasurementPackage meas_package;
-    GroundTruthPackage gt_package;
-    istringstream iss(line);
-    long timestamp;
+          // Read ground truth data.
+          float x_gt;
+          float y_gt;
+          float vx_gt;
+          float vy_gt;
+          iss >> x_gt;
+          iss >> y_gt;
+          iss >> vx_gt;
+          iss >> vy_gt;
+          gt_package.gt_values_ = VectorXd(4);
+          gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
 
-    // reads first element from the current line
-    iss >> sensor_type;
-    if (sensor_type.compare("L") == 0) {
-      // LASER MEASUREMENT
+          // Predict and update.
+          fusionEKF.ProcessMeasurement(meas_package);
 
-      // read measurements at this timestamp
-      meas_package.sensor_type_ = MeasurementPackage::LASER;
-      meas_package.raw_measurements_ = VectorXd(2);
-      float x;
-      float y;
-      iss >> x;
-      iss >> y;
-      meas_package.raw_measurements_ << x, y;
-      iss >> timestamp;
-      meas_package.timestamp_ = timestamp;
-      measurement_pack_list.push_back(meas_package);
-    } else if (sensor_type.compare("R") == 0) {
-      // RADAR MEASUREMENT
+          cout << "PREDICTION: ";
+          cout << fusionEKF.ekf_.x_(0) << "\t";
+          cout << fusionEKF.ekf_.x_(1) << "\t";
+          cout << fusionEKF.ekf_.x_(2) << "\t";
+          cout << fusionEKF.ekf_.x_(3) << "\t\n";
 
-      // read measurements at this timestamp
-      meas_package.sensor_type_ = MeasurementPackage::RADAR;
-      meas_package.raw_measurements_ = VectorXd(3);
-      float ro;
-      float phi;
-      float ro_dot;
-      iss >> ro;
-      iss >> phi;
-      iss >> ro_dot;
-      meas_package.raw_measurements_ << ro, phi, ro_dot;
-      iss >> timestamp;
-      meas_package.timestamp_ = timestamp;
-      measurement_pack_list.push_back(meas_package);
-    }
+          rmse = tools.CalculateRMSEContinuous(fusionEKF.ekf_.x_,
+                                               gt_package.gt_values_,
+                                               rmse,
+                                               message_count);
 
-    // read ground truth data to compare later
-    float x_gt;
-    float y_gt;
-    float vx_gt;
-    float vy_gt;
-    iss >> x_gt;
-    iss >> y_gt;
-    iss >> vx_gt;
-    iss >> vy_gt;
-    gt_package.gt_values_ = VectorXd(4);
-    gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
-    gt_pack_list.push_back(gt_package);
-  }
+          cout << "ACCURACY - RMSE: ";
+          cout << rmse(0) << "\t";
+          cout << rmse(1) << "\t";
+          cout << rmse(2) << "\t";
+          cout << rmse(3) << "\t\n";
 
-  // Create a Fusion EKF instance
-  FusionEKF fusionEKF;
+          std::unique_lock<std::mutex> lk(mu);
+          ++message_count;
+          lk.unlock();
+          cv.notify_one();
+          // Ack the message.
+          std::move(h).ack();
+          cout << "# ACK'ED: " << message_count << "\n";
+        });
 
-  // used to compute the RMSE later
-  vector<VectorXd> estimations;
-  vector<VectorXd> ground_truth;
+    std::unique_lock<std::mutex> lk(mu);
+    cv.wait_for(lk,
+                30 * 1000ms,
+                [&message_count] { return message_count > 10000; });
+    lk.unlock();
+    // Cancel the subscription session.
+    session.cancel();
+    // Wait for the session to complete, no more callbacks after this point.
+    auto status = session.get();
+    // Report any final status, blocking.
+    std::cout << "Message count: " << message_count << ", status: " << status
+              << "\n";
+  };
 
-  //Call the EKF-based fusion
-  size_t N = measurement_pack_list.size();
-  for (size_t k = 0; k < N; ++k) {
-    // start filtering from the second frame (the speed is unknown in the first
-    // frame)
-    fusionEKF.ProcessMeasurement(measurement_pack_list[k]);
+  receive_messages(
+      pubsub::Subscriber(
+          pubsub::MakeSubscriberConnection(
+              pubsub::Subscription(project_id, subscription_id))));
 
-    // output the estimation
-    out_file_ << fusionEKF.ekf_.x_(0) << "\t";
-    out_file_ << fusionEKF.ekf_.x_(1) << "\t";
-    out_file_ << fusionEKF.ekf_.x_(2) << "\t";
-    out_file_ << fusionEKF.ekf_.x_(3) << "\t";
-
-    // output the measurements
-    if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER) {
-      // output the estimation
-      out_file_ << measurement_pack_list[k].raw_measurements_(0) << "\t";
-      out_file_ << measurement_pack_list[k].raw_measurements_(1) << "\t";
-    } else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR) {
-      // output the estimation in the cartesian coordinates
-      float ro = measurement_pack_list[k].raw_measurements_(0);
-      float phi = measurement_pack_list[k].raw_measurements_(1);
-      out_file_ << ro * cos(phi) << "\t"; // p1_meas
-      out_file_ << ro * sin(phi) << "\t"; // ps_meas
-    }
-
-    // output the ground truth packages
-    out_file_ << gt_pack_list[k].gt_values_(0) << "\t";
-    out_file_ << gt_pack_list[k].gt_values_(1) << "\t";
-    out_file_ << gt_pack_list[k].gt_values_(2) << "\t";
-    out_file_ << gt_pack_list[k].gt_values_(3) << "\n";
-
-    estimations.push_back(fusionEKF.ekf_.x_);
-    ground_truth.push_back(gt_pack_list[k].gt_values_);
-  }
-
-  // compute the accuracy (RMSE)
-  Tools tools;
-  cout << "Accuracy - RMSE:" << endl << tools.CalculateRMSE(estimations, ground_truth) << endl;
-
-  // close files
-  if (out_file_.is_open()) {
-    out_file_.close();
-  }
-
-  if (in_file_.is_open()) {
-    in_file_.close();
-  }
-
-  return 0;
+} catch (std::exception const& ex) {
+  std::cerr << "Standard exception raised: " << ex.what() << "\n";
+  return 1;
 }
