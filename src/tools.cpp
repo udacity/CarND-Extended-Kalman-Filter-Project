@@ -1,6 +1,7 @@
-#include "tools.h"
 #include <iostream>
+#include "tools.h"
 
+using namespace std;
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
