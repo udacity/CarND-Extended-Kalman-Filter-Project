@@ -3,8 +3,6 @@
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-const double PI = 3.14159265;
-const double TAU = 2 * PI;
 
 /* 
  * Please note that the Eigen library does not initialize 
@@ -43,17 +41,7 @@ void KalmanFilter::Update(const VectorXd &z)
      */
     VectorXd z_pred = H_ * x_;
     VectorXd y = z - z_pred;
-    MatrixXd Ht = H_.transpose();
-    MatrixXd S = H_ * P_ * Ht + R_;
-    MatrixXd Si = S.inverse();
-    MatrixXd PHt = P_ * Ht;
-    MatrixXd K = PHt * Si;
-
-    //new estimate
-    x_ = x_ + (K * y);
-    long x_size = x_.size();
-    MatrixXd I = MatrixXd::Identity(x_size, x_size);
-    P_ = (I - K * H_) * P_;
+    CommonUpdate(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z)
@@ -67,30 +55,36 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
     float vx = x_(2);
     float vy = x_(3);
 
-    float c1 = sqrt(px * px + py * py);
+    float rho = sqrt(px * px + py * py);
 
-    if (c1 < 0.00001)
+    if (rho < 0.00001)
     {
         px += 0.001;
         py += 0.001;
-        c1 = sqrt(px * px + py * py);
+        rho = sqrt(px * px + py * py);
     }
 
-    float c2 = atan2(py, px);
-    float c3 = (px * vx + py * vy) / c1;
+    float theta = atan2(py, px);
+    float rho_dot = (px * vx + py * vy) / rho;
 
     VectorXd hx(3);
-    hx << c1, c2, c3;
+    hx << rho, theta, rho_dot;
 
     VectorXd y = z - hx;
 
     // Nomalize angle to within -PI and PI if needed
-    while (y(1) > PI || y(1) < -PI)
+    while (y(1) > M_PI || y(1) < -M_PI)
     {
-        if (y(1) > PI) y(1) -= TAU;
-        else if (y(1) < -PI) y(1) += TAU;
+        if (y(1) > M_PI) y(1) -= M_PI;
+        else if (y(1) < -M_PI) y(1) += M_PI;
     }
 
+    CommonUpdate(y);
+}
+
+
+void KalmanFilter::CommonUpdate(const VectorXd &y)
+{
     MatrixXd Ht = H_.transpose();
     MatrixXd S = H_ * P_ * Ht + R_;
     MatrixXd Si = S.inverse();
