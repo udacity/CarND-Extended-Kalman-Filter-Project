@@ -12,4 +12,4 @@ The major objective of this project is to implement a Kalman filter using *C++* 
 
 | ![](data/images/dataset1.gif) | ![](data/images/dataset2.gif) |
 |-------------------------------|-------------------------------|
-|       *Dataset 01*            |         *Dataset 02*          |
+|[*Dataset 01*](https://youtu.be/me-b7wNDdX4)| [*Dataset 02*](https://youtu.be/UQJ7q2JMteM)|
