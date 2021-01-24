@@ -10,12 +10,16 @@ Tools::Tools() {}
 
 Tools::~Tools() {}
 
+/**
+ * Calculate RMSE : https://en.wikipedia.org/wiki/Root-mean-square_deviation
+ *
+ * @param estimations
+ * @param ground_truth
+ * @return : RMSE vector
+ */
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth)
 {
-    /**
-     * TODO: Calculate the RMSE here.
-     */
 
     VectorXd rmse(4);
     rmse << 0, 0, 0, 0;
@@ -41,13 +45,13 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 }
 
+/**
+ * Calculate Jacobian matrix : https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant
+ * @param x_state
+ * @return : Jacobian matrix
+ */
 MatrixXd Tools::CalculateJacobian(const VectorXd &x_state)
 {
-    /**
-     * TODO:
-     * Calculate a Jacobian here.
-     */
-
 
     MatrixXd Hj(3, 4);
     // recover state parameters
@@ -55,8 +59,6 @@ MatrixXd Tools::CalculateJacobian(const VectorXd &x_state)
     float py = x_state(1);
     float vx = x_state(2);
     float vy = x_state(3);
-
-    // TODO: YOUR CODE HERE
 
     float c1 = px * px + py * py;
     float c2 = sqrt(c1);
