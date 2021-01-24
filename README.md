@@ -9,3 +9,7 @@ The major objective of this project is to implement a Kalman filter using *C++* 
 * Kalman filter
 * Extended Kalman filter
 * Sensor fusion
+
+| ![](data/images/dataset1.gif) | ![](data/images/dataset2.gif) |
+|-------------------------------|-------------------------------|
+|       *Dataset 01*            |         *Dataset 02*          |
