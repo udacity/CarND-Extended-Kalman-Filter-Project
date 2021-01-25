@@ -113,7 +113,7 @@ void KalmanFilter::CommonUpdate(const VectorXd &y)
 ```
 
 ### Extended Kalman Filter
-*The extended Kalman filter (EKF) is the nonlinear version of the Kalman filter which linearizes about an estimate of the current mean and covariance.* [Ref](https://en.wikipedia.org/wiki/Extended_Kalman_filter) Following the is *C++* implementation for **EKF Update** function.
+*The extended Kalman filter (EKF) is the nonlinear version of the Kalman filter which linearizes about an estimate of the current mean and covariance[[Ref]](https://en.wikipedia.org/wiki/Extended_Kalman_filter).* Following the is *C++* implementation for **EKF Update** function.
 
 ```cpp
 void KalmanFilter::UpdateEKF(const VectorXd &z)
