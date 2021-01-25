@@ -4,3 +4,4 @@ https://www.youtube.com/watch?v=6qV3YjFppuc&list=PLn8PRpmsu08ryYoBpEKzoMOveSTyS-
 https://medium.com/think-autonomous/how-radars-work-1eb523893d62
 https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/
 https://www.remcom.com/automotive-radar
+http://web.mit.edu/kirtley/kirtley/binlustuff/literature/control/Kalman%20filter.pdf
