@@ -24,3 +24,6 @@ In addition, sensors known as inertial measurement units help track a vehicle’
 
 *Autonomous vehicles rely on cameras placed on every side — front, rear, left and right — to stitch together a 360-degree view of their environment. Some have a wide field of view — as much as 120 degrees — and a shorter range. Others focus on a more narrow view to provide long-range visuals.* [Ref](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)
 
+|![](data/images/camera.png.webp)|
+|---------------------------------|
+|Source: [An autonomous driving camera sensor developed by NVIDIA DRIVE partner Sekonix](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)|
