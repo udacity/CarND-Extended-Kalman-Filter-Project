@@ -24,9 +24,9 @@ In addition, sensors known as inertial measurement units help track a vehicle’
 
 *Autonomous vehicles rely on cameras placed on every side — front, rear, left and right — to stitch together a 360-degree view of their environment. Some have a wide field of view — as much as 120 degrees — and a shorter range. Others focus on a more narrow view to provide long-range visuals.* [Ref](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)
 
-|<img src="data/images/camera.png.webp" height="250" />|
-|---------------------------------|
-|Source: [How Does a Self-Driving Car See?](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)|
+|<img src="data/images/camera.png.webp" height="250" />|<img src="data/images/human-cross-road.jpg.webp" height="250" />|
+|---------------------------------|---------------------------------------------------------------------------|
+|Source: [How Does a Self-Driving Car See?](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)|A camera sensor usecase|
 
 ##### Radar
 *Radar sensors can supplement camera vision in times of low visibility, like night driving, and improve detection for self-driving cars.
