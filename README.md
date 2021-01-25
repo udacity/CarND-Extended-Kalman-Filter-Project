@@ -45,3 +45,12 @@ By emitting invisible lasers at incredibly fast speeds, lidar sensors are able t
 |<img src="data/images/lidar-sensor.png.webp" height="250" />|<img src="data/images/laser.png.webp" height="250" />|
 |---------------------------------|-------------------------------------------------------------------------------|
 |Source: [How Does a Self-Driving Car See?](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)|A lidar sensor in action|
+
+
+### Kalman Filter
+*The Kalman filter keeps track of the estimated state of the system and the variance or uncertainty of the estimate.* [Ref](https://en.wikipedia.org/wiki/Kalman_filter)
+
+Following is the Kalman filter recursive algorithm.
+
+![](data/images/kalman-filter.png)
+
