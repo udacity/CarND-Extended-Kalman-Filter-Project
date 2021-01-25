@@ -33,4 +33,4 @@ In addition, sensors known as inertial measurement units help track a vehicle’
 Traditionally used to detect ships, aircraft and weather formations, radar works by transmitting radio waves in pulses. Once those waves hit an object, they return to the sensor, providing data on the speed and location of the object.* [Ref](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/)
 |<img src="data/images/radar.jpeg" height="250" />|<img src="data/images/metawave.png.webp" height="250" />|
 |---------------------------------|-------------------------------------------------------------------------------|
-|Source: [Automotive Radar Simulation Software](https://www.remcom.com/automotive-radar)|A radar usecase|
+|Source: [Automotive Radar Simulation Software](https://www.remcom.com/automotive-radar)|A radar sensor usecase|
