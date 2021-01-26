@@ -169,6 +169,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 * https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/
 * https://www.remcom.com/automotive-radar
 * http://web.mit.edu/kirtley/kirtley/binlustuff/literature/control/Kalman%20filter.pdf
+* https://www.khanacademy.org/math/statistics-probability/modeling-distributions-of-data/more-on-normal-distributions/v/introduction-to-the-normal-distribution
 
 ### Acknowledgments
 Big thank you to [Udacity](https://www.udacity.com) for providing the template code and simulator for this project.
