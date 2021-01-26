@@ -4,7 +4,7 @@ Project: Extended Kalman Filter
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 ### Introduction
-The major objective of this project is to implement a Kalman filter using *C++* as primay tool and tests with the [`Udacity simulator`](https://github.com/udacity/self-driving-car-sim). I'll be discussing following details to undestand few theoritical concepts that are used to implement this project.
+The major objective of this project is to implement a Kalman filter using *C++* as a primary tool and tests with the [`Udacity simulator`](https://github.com/udacity/self-driving-car-sim). I'll discuss the following details to understand few theoretical concepts used to implement this project.
 
 * Sensors
 * Kalman filter
@@ -22,7 +22,7 @@ In addition, sensors known as inertial measurement units help track a vehicle’
 
 ##### Camera
 
-*Autonomous vehicles rely on cameras placed on every side — front, rear, left and right — to stitch together a 360-degree view of their environment. Some have a wide field of view — as much as 120 degrees — and a shorter range. Others focus on a more narrow view to provide long-range visuals[[Ref]](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/).*
+*Autonomous vehicles rely on cameras placed on every side - front, rear, left and right - to stitch together a 360-degree view of their environment. Some have a wide field of view - as much as 120 degrees - and a shorter range. Others focus on a more narrow view to provide long-range visuals[[Ref]](https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/).*
 
 |<img src="data/images/camera.png.webp" height="250" />|<img src="data/images/human-cross-road.jpg.webp" height="250" />|
 |---------------------------------|---------------------------------------------------------------------------|
@@ -55,7 +55,7 @@ Following is the Kalman filter recursive algorithm.
 
 ![](data/images/kalman-filter.png)
 
-Following is the *C++*(C++ 14 standands) implementation of Kalman filter. [Eigen](http://eigen.tuxfamily.org/dox/)(version 3.3.9) library was used to do matrices related operations.  
+Following is the *C++*(C++ 14 standards) implementation of Kalman filter. [Eigen](http://eigen.tuxfamily.org/dox/)(version 3.3.9) library was used to do matrices related operations.  
 
 ```cpp
 // state vector
@@ -153,7 +153,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 ```
 
 ### Sensor Fusion
-*Sensor fusion is combining of sensory data or data derived from disparate sources such that the resulting information has less uncertainty than would be possible when these sources were used individually. The term uncertainty reduction in this case can mean more accurate, more complete, or more dependable, or refer to the result of an emerging view, such as stereoscopic vision (calculation of depth information by combining two-dimensional images from two cameras at slightly different viewpoints)[[Ref]](https://en.wikipedia.org/wiki/Sensor_fusion).*
+*Sensor fusion is combining of sensory data or data derived from disparate sources such that the resulting information has less uncertainty than would be possible when these sources were used individually. The term uncertainty reduction, in this case, can mean more accurate, more complete, or more dependable, or refer to the result of an emerging view, such as stereoscopic vision (calculation of depth information by combining two-dimensional images from two cameras at slightly different viewpoints)[[Ref]](https://en.wikipedia.org/wiki/Sensor_fusion).*
 
 |![](data/images/1200px-Eurofighter_sensor_fusion.png)|
 |-----------------------------------------------------|
