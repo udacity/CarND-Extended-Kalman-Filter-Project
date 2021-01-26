@@ -38,7 +38,7 @@ Here is the main protocol that main.cpp uses for uWebSocketIO in communicating w
 
 ## Other Important Dependencies
 
-* cmake >= 3.5
+* cmake >= 3.10
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
   * Linux: make is installed by default on most Linux distros
