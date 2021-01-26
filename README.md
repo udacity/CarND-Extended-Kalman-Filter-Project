@@ -161,5 +161,15 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 
 [`FusionEKF.cpp`](src/FusionEKF.cpp) can be referred to find more details about fusion.
 
+### References
+* https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013
+* https://www.youtube.com/watch?v=mwn8xhgNpFY&list=PLn8PRpmsu08pzi6EMiYnR-076Mh-q3tWr
+* https://www.youtube.com/watch?v=6qV3YjFppuc&list=PLn8PRpmsu08ryYoBpEKzoMOveSTyS-h4a
+* https://medium.com/think-autonomous/how-radars-work-1eb523893d62
+* https://blogs.nvidia.com/blog/2019/04/15/how-does-a-self-driving-car-see/
+* https://www.remcom.com/automotive-radar
+* http://web.mit.edu/kirtley/kirtley/binlustuff/literature/control/Kalman%20filter.pdf
 
+### Acknowledgments
+Big thank you to [Udacity](https://www.udacity.com) for providing the template code and simulator for this project.
 
