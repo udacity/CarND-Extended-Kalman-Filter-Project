@@ -49,6 +49,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 
     float rho = sqrt(px * px + py * py);
 
+    // Handle divided by zero
     if (rho < 0.00001)
     {
         px += 0.001;
@@ -64,7 +65,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 
     VectorXd y = z - hx;
 
-    // Nomalize angle to within -PI and PI if needed
+    // Normalize angle to within -PI and PI if needed
     while (y(1) > M_PI || y(1) < -M_PI)
     {
         if (y(1) > M_PI) y(1) -= M_PI;
