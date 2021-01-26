@@ -152,6 +152,38 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 }
 ```
 
+Kalman filter prediction accuracy will be calculated by using the [RMSE](https://en.wikipedia.org/wiki/Root-mean-square_deviation) metric. Following is the *C++* implementation of RMSE.
+
+```cpp
+VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
+                              const vector<VectorXd> &ground_truth)
+{
+
+    VectorXd rmse(4);
+    rmse << 0, 0, 0, 0;
+
+    if (estimations.size() != ground_truth.size() or estimations.empty())
+    {
+        cout << "Invalid estimation or ground thruth data\n";
+        return rmse;
+    }
+
+    // accumulate squared residuals
+    for (size_t i = 0; i < estimations.size(); ++i)
+    {
+        VectorXd residual = estimations[i] - ground_truth[i];
+        residual = residual.array() * residual.array();
+        rmse += residual;
+    }
+
+    rmse = rmse / estimations.size();
+    rmse = rmse.array().sqrt();
+
+    return rmse;
+}
+
+```
+
 ### Sensor Fusion
 *Sensor fusion is combining of sensory data or data derived from disparate sources such that the resulting information has less uncertainty than would be possible when these sources were used individually. The term uncertainty reduction, in this case, can mean more accurate, more complete, or more dependable, or refer to the result of an emerging view, such as stereoscopic vision (calculation of depth information by combining two-dimensional images from two cameras at slightly different viewpoints)[[Ref]](https://en.wikipedia.org/wiki/Sensor_fusion).*
 
